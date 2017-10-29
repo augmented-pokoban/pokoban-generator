@@ -16,9 +16,9 @@ fun main(args: Array<String>) {
         val id = UUID.randomUUID().toString()
         val room = GeneratorService.instance.generate(20,20)
 
-        /*Files.write(
+        Files.write(
                 Paths.get("levels/$id.lvl"),
                 room.toByteArray()
-        )*/
+        )
     }
 }

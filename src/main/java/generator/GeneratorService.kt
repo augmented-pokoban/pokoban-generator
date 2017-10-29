@@ -33,6 +33,7 @@ class GeneratorService private constructor() {
         )
 
         // isSolvableLevel that level can be solved - otherwise retry level generation
+
         if (!isSolvableLevel(level, objectPositions)) return generate(height, width)
 
         return toRoom(level)
@@ -134,9 +135,11 @@ class GeneratorService private constructor() {
         val startPosition = objectPositions.first()
 
         // try all reachable positions from starting position
-        val reachedPositions = explore(level, startPosition, listOf(startPosition))
+        val reachedPositions = explore(level, startPosition, listOf(startPosition)) + listOf(startPosition)
 
-        return true
+        return objectPositions.map {
+            reachedPositions.contains(it)
+        }.reduce { acc, b -> acc && b }
     }
 
     private fun explore(level: Array<Array<String>>,
@@ -157,7 +160,11 @@ class GeneratorService private constructor() {
                     !reachedNeighbours.contains(it)
         }
 
-        return neighbours.map { explore(level, it, neighbours + reachedNeighbours) }.flatten()
+        neighbours.forEach {
+            neighbours += explore(level, it, neighbours + reachedNeighbours)
+        }
+
+        return neighbours
     }
 
     /**
