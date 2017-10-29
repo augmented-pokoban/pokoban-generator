@@ -121,7 +121,7 @@ class GeneratorService private constructor() {
         val objectY = (2 until level.size - 2).random()
 
         // try a new position, if it is a wall
-        if (level[objectY][objectX] == "+") return placeObject(letter, level)
+        if (level[objectY][objectX] != " ") return placeObject(letter, level)
 
         level[objectY][objectX] = letter
 
