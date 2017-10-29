@@ -132,15 +132,16 @@ class GeneratorService private constructor() {
      */
     private fun isSolvableLevel(level: Array<Array<String>>, objectPositions: List<Pair<Int, Int>>): Boolean {
         val startPosition = objectPositions.first()
-        val visitablePositions = mutableListOf<Pair<Int, Int>>()
 
         // try all reachable positions from starting position
-        val reachablePositions = explore(level, startPosition, listOf(startPosition))
+        val reachedPositions = explore(level, startPosition, listOf(startPosition))
 
         return true
     }
 
-    private fun explore(level: Array<Array<String>>, position: Pair<Int, Int>, reachableNeighbours: List<Pair<Int, Int>>): List<Pair<Int, Int>> {
+    private fun explore(level: Array<Array<String>>,
+                        position: Pair<Int, Int>,
+                        reachedNeighbours: List<Pair<Int, Int>>): List<Pair<Int, Int>> {
 
         var neighbours = listOf<Pair<Int, Int>>(
                 Pair(position.first + 1, position.second),
@@ -153,10 +154,10 @@ class GeneratorService private constructor() {
             it.first < 19 && it.second < 19 &&
                     it.first > 0 && it.second > 0 &&
                     level[it.second][it.first] != "+" &&
-                    !reachableNeighbours.contains(it)
-        } + reachableNeighbours
+                    !reachedNeighbours.contains(it)
+        }
 
-        return neighbours.map { explore(level, it, neighbours) }.flatten()
+        return neighbours.map { explore(level, it, neighbours + reachedNeighbours) }.flatten()
     }
 
     /**
