@@ -52,7 +52,7 @@ class GeneratorService private constructor() {
         if (level[currentY][currentX] == " ") return randomWalk(level)
 
         var currentDirection = (0..3).random() // 0 = north, 1 = south, 2 = east, 3 = west
-        val maxSteps = 30
+        val maxSteps = 35
         val directionChangeProbability = 0.30
 
         // store visited positions

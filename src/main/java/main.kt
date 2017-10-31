@@ -1,6 +1,9 @@
 import generator.GeneratorService
+import org.apache.commons.codec.binary.Hex
+import org.apache.commons.codec.digest.DigestUtils
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.security.MessageDigest
 import java.util.*
 
 // TODO 1: Generate map full of walls
@@ -12,13 +15,15 @@ import java.util.*
 
 fun main(args: Array<String>) {
 
-    (0 until 10).forEach {
-        val id = UUID.randomUUID().toString()
-        val room = GeneratorService.instance.generate(20,20)
+    (0 until 100000).forEach {
+        val room = GeneratorService.instance.generate(20,20).toByteArray()
+
+        // generate md5 checksum of level
+        val id = String(Hex.encodeHex(DigestUtils.getMd5Digest().digest(room)))
 
         Files.write(
-                Paths.get("levels/$id.lvl"),
-                room.toByteArray()
+                Paths.get("levels/unsupervised/$id.lvl"),
+                room
         )
     }
 }
