@@ -91,19 +91,19 @@ class GeneratorService private constructor() {
         when (direction) {
             0 -> { // north
                 if (nextY < 17) nextY++
-                //level[nextY][nextX + 1] = " "
+                level[nextY][nextX + 1] = " "
             }
             1 -> { // south
                 if (nextY > 2) nextY--
-                //level[nextY][nextX + 1] = " "
+                level[nextY][nextX + 1] = " "
             }
             2 -> { // east
                 if (nextX < 17) nextX++
-                //level[nextY + 1][nextX] = " "
+                level[nextY + 1][nextX] = " "
             }
             3 -> { // west
                 if (nextY > 2) nextX--
-                //level[nextY + 1][nextX] = " "
+                level[nextY + 1][nextX] = " "
             }
         }
 
@@ -120,7 +120,7 @@ class GeneratorService private constructor() {
         val objectX = (2 until level[0].size - 2).random()
         val objectY = (2 until level.size - 2).random()
 
-        // try a new position, if it is a wall
+        // try a new position, if it is not free
         if (level[objectY][objectX] != " ") return placeObject(letter, level)
 
         level[objectY][objectX] = letter
@@ -137,11 +137,12 @@ class GeneratorService private constructor() {
         // try all reachable positions from starting position
         val reachedPositions = explore(level, startPosition, listOf(startPosition)) + listOf(startPosition)
 
-        return objectPositions.map {
-            reachedPositions.contains(it)
-        }.reduce { acc, b -> acc && b }
+        return objectPositions.map { reachedPositions.contains(it) }.reduce { acc, b -> acc && b }
     }
 
+    /**
+     * Explores all possible nodes via BFS, starting from one of the mandatory positions.
+     */
     private fun explore(level: Array<Array<String>>,
                         position: Pair<Int, Int>,
                         reachedNeighbours: List<Pair<Int, Int>>): List<Pair<Int, Int>> {
