@@ -26,14 +26,19 @@ class GeneratorService private constructor() {
         (0 until 5).forEach { randomWalk(level) }
 
         // place objects
-        val objectPositions = listOf(
-                placeObject("a", level), // goal
-                placeObject("A", level), // box
-                placeObject("0", level) // agent
-        )
+        var objectPositions: List<Pair<Int, Int>>
+        try {
+            objectPositions = listOf(
+                    placeObject("a", level), // goal
+                    placeObject("A", level), // box
+                    placeObject("0", level) // agent
+            )
+        } catch (err: StackOverflowError) {
+            //println("Recursed too deep when trying to generate a level: " + err.message)
+            return generate(height, width)
+        }
 
         // isSolvableLevel that level can be solved - otherwise retry level generation
-
         if (!isSolvableLevel(level, objectPositions)) return generate(height, width)
 
         return toRoom(level)

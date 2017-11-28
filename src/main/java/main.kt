@@ -3,8 +3,6 @@ import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.security.MessageDigest
-import java.util.*
 
 // TODO 1: Generate map full of walls
 // TODO 2: Select random initial position
@@ -15,15 +13,19 @@ import java.util.*
 
 fun main(args: Array<String>) {
 
-    (0 until 100000).forEach {
-        val room = GeneratorService.instance.generate(20,20).toByteArray()
+    (0 until 10).toList().parallelStream().forEach {
 
-        // generate md5 checksum of level
-        val id = String(Hex.encodeHex(DigestUtils.getMd5Digest().digest(room)))
+        println("Starting thread $it")
 
-        Files.write(
-                Paths.get("levels/unsupervised/$id.lvl"),
-                room
-        )
+        (0 until 100000).forEach {
+            val room = GeneratorService.instance.generate(20, 20).toByteArray()
+
+            // generate md5 checksum of level
+            val id = String(Hex.encodeHex(DigestUtils.getMd5Digest().digest(room)))
+
+            Files.write(Paths.get("../levels/easy/$id.lvl"), room)
+        }
+
+        println("Thread $it finished")
     }
 }
